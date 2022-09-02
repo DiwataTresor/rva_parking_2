@@ -23,6 +23,7 @@ import {
   AlertDialog,
   HStack,
   useToast,
+  Tag,
 } from "native-base";
 import logoRva from "./../assets/logoRva.png";
 import parking from "./../assets/parking.jpg";
@@ -40,6 +41,8 @@ import Sortieparking from "./Sortieparking";
 import Parametre from "./Parametre";
 import Qr from "./Qr";
 import Accueil from "./Accueil";
+import Login from "./Login";
+import { useStateContext } from "../contexts/ContextProvider";
 
 export function Principal() {
   return (
@@ -51,73 +54,73 @@ export function Principal() {
 const Tab = createBottomTabNavigator();
 function Home() {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle:{
-        tabBarActiveTintColor:"orange",
-        tabBarLabelStyle:{color:"black", size:"large"},
-        tabBarItemStyle:({color})=>{"white"}
-        
-        }
-        
-      }}
-    >
-      
-      <Tab.Screen 
-        options={{
-          title:"Home",
-          headerStyle: {
-            backgroundColor: "blue",
-          },
-          headerTintColor:"#FFF",
-          tabBarIcon: ({ color, size }) => (<AntDesign name='home' size={24} color="black" />),
-          tabBarInactiveTintColor:"navy",
-          tabBarIcon: ({tintColor}) => (
-            <AntDesign name='home' size={25} color={tintColor} />
-          ),
-        }}
-        name="accueil" Icon component={Accueil} 
-      />
-      <Tab.Screen 
-        options={{
-          headerStyle: {
-            backgroundColor: "blue",
-          },
-          headerTintColor:"#FFF",
-          tabBarIcon: ({ color, size }) => (<AntDesign name='export' size={24} color="black" />),
-          tabBarInactiveTintColor:"navy",
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle:{
+          tabBarActiveTintColor:"orange",
+          tabBarLabelStyle:{color:"black", size:"large"},
+          tabBarItemStyle:({color})=>{"white"}
+          
+          }
           
         }}
+      >
         
-        name="Entree parking" Icon component={Entreeparking} 
-      />
-      <Tab.Screen 
-        options={{
-          headerStyle: {
-            backgroundColor: "blue",
-          },
-          headerTintColor:"#FFF",
-          tabBarIcon: ({ color, size }) => (<AntDesign name='export2' size={24} color="black" />),
-          tabBarInactiveTintColor:"navy",
-        }}
-        name="Sortie parking" component={Sortieparking}  
-      />
-      <Tab.Screen 
-        options={{
-          headerStyle: {
-            backgroundColor: "blue",
-          },
-          headerTintColor:"#FFF",
-          tabBarIcon: ({ color, size }) => (<EvilIcons name='gear' size={24} color="black" />),
-          tabBarItemStyle:{color:"white"},
-          tabBarInactiveTintColor:"navy",
-          headerShown:false
-          // headerBackImage: <Ionicons name="return-up-back" size={24} color="black" />  
+        <Tab.Screen 
+          options={{
+            title:"Home",
+            headerStyle: {
+              backgroundColor: "blue",
+            },
+            headerTintColor:"#FFF",
+            tabBarIcon: ({ color, size }) => (<AntDesign name='home' size={24} color="black" />),
+            tabBarInactiveTintColor:"navy",
+            tabBarIcon: ({tintColor}) => (
+              <AntDesign name='home' size={25} color={tintColor} />
+            ),
+          }}
+          name="accueil" Icon component={Accueil} 
+        />
+        <Tab.Screen 
+          options={{
+            headerStyle: {
+              backgroundColor: "blue",
+            },
+            headerTintColor:"#FFF",
+            tabBarIcon: ({ color, size }) => (<AntDesign name='export' size={24} color="black" />),
+            tabBarInactiveTintColor:"navy",
+            
+          }}
           
-        }}
-        name="Parametre" component={Parametre}  
-      />
-    </Tab.Navigator>
+          name="Entree parking" Icon component={Entreeparking} 
+        />
+        <Tab.Screen 
+          options={{
+            headerStyle: {
+              backgroundColor: "blue",
+            },
+            headerTintColor:"#FFF",
+            tabBarIcon: ({ color, size }) => (<AntDesign name='export2' size={24} color="black" />),
+            tabBarInactiveTintColor:"navy",
+          }}
+          name="Sortie parking" component={Sortieparking}  
+        />
+        <Tab.Screen 
+          options={{
+            headerStyle: {
+              backgroundColor: "blue",
+            },
+            headerTintColor:"#FFF",
+            tabBarIcon: ({ color, size }) => (<EvilIcons name='gear' size={24} color="black" />),
+            tabBarItemStyle:{color:"white"},
+            tabBarInactiveTintColor:"navy",
+            headerShown:false
+            // headerBackImage: <Ionicons name="return-up-back" size={24} color="black" />  
+            
+          }}
+          name="Parametre" component={Parametre}  
+        />
+      </Tab.Navigator>
   );
 }
 function Main() {
@@ -126,55 +129,13 @@ function Main() {
   };
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const {connected,setConnected}=useStateContext();
+  
   return (
-    <Home />
-    // <SafeAreaView>
-    //   <View className="flex flex-col justify-between h-full bg-slate-200 pt-16">
-    //     <ImageBackground
-    //       source={parking}
-    //       resizeMode="cover"
-    //       className="accent-slate-200 "
-    //       imageStyle={{opacity:0.4}}
-    //     >
-    //     <View className="h-full w-full flex flex-col justify-between bg-opacity-5">
-
-    //       <View className="text-red-100 items-center">
-    //         <Image source={logoRva} className="w-64 h-20" />
-    //         <Text className="text-md text-orange-400">
-    //           GESTION PARKING AEROPORT [G.P.A]
-    //         </Text>
-    //       </View>
-    //       <View>
-    //         <View className="items-center py-3">
-    //         <Input shadow={2} _light={{bg: 'coolGray.700'}} _dark={{bg: 'coolGray.800'}}
-    //         w={{base:"75%"}}
-    //         className="opacity-50"
-    //         onChange={(e) => setLogin(e.target.value)}
-    //         placeholder="Nom utilisateur" />
-    //         <View className="h-4">
-    //         </View>
-    //         <Input shadow={2} _light={{bg: 'coolGray.700'}} _dark={{bg: 'coolGray.800'}}
-    //         secureTextEntry={true}
-    //         w={{base:"75%"}}
-    //         className="opacity-50"
-    //         onChange={(e) => setPassword(e.target.value)}
-    //         placeholder="Mot de passe" />
-
-    //           <View className="mt-4">
-    //             <Button
-    //               onPress={() => Alert.alert("dsds")}
-    //               title="Se connecter"
-    //             />
-    //           </View>
-    //         </View>
-    //       </View>
-    //       <View className="content-center items-center pb-3 text-sm">
-    //         <Text>&copy; 2022 | RVA-Division Info</Text>
-    //       </View>
-    //       </View>
-    //     </ImageBackground>
-    //   </View>
-    // </SafeAreaView>
+    connected?(
+    <Home />):(
+    <Login />
+    )
   );
 }
 const styles = StyleSheet.create({

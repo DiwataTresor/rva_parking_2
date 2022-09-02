@@ -5,22 +5,44 @@ import { Input } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import QRCode from "react-native-qrcode-svg";
 import { Alert } from "react-native";
+import {useStateContext} from './../contexts/ContextProvider';
 import logoRva from "./../assets/logoRva.png";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
+
+
+import Loading from './../components/Loading';
 
 const Entreeparking = () => {
   const [input, setInput] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [immatriculation, setImmatriculation] = useState("");
+  const {nomUser,setNomUser} =useStateContext();
+  const [isOpened, setIsOpened] = useState(false);
+  const {api}=useStateContext();
   const generateQrCode = (v) => {
     if (v == "" || v == null) {
-      setImmatriculation(v.toUpperCase());
+      
       setQrCode("");
     } else {
       setImmatriculation(v.toUpperCase());
       setQrCode(v);
     }
   };
+  const changerNom=()=>{
+    Alert.alert("jk");
+    setNomUser("papa");
+  }
+  const saveImmatriculation=()=>{
+    //setIsOpened(true);
+    Alert.alert(api);
+    let ad=new FormData();
+ad.append("qry","test");
+fetch(api,{method:"POST",body:JSON.stringify({"nom":"tresor"})})
+.then(r=>r.json())
+.then(r=>Alert.alert(r.n))
+.catch(r=>Alert.alert(r))
+  }
   return (
     <SafeAreaView className="mt-25 h-full">
       <View className="flex flex-col justify-between h-full bg-slate-200">
@@ -69,6 +91,7 @@ const Entreeparking = () => {
                 setImmatriculation(e);
               }}
               onChangeText={generateQrCode}
+              onBlur={()=>changerNom()}
               InputLeftElement={
                 <MaterialIcons
                   name="keyboard"
@@ -83,7 +106,8 @@ const Entreeparking = () => {
           <View className="mt-3">
             <Button
               title="Enregistrer"
-              onPress={generateQrCode}
+              //onPress={generateQrCode}
+              onPress={()=>saveImmatriculation()}
               className="mt-2"
             />
           </View>
@@ -94,6 +118,7 @@ const Entreeparking = () => {
             </Text>
         </View>
       </View>
+      <Loading isOpened={isOpened} text="Connexion en cours..." />
     </SafeAreaView>
   );
 };

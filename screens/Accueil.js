@@ -3,7 +3,8 @@ import React from 'react'
 import { SafeAreaView } from 'react-native';
 import {gestion_parking} from './../assets/gestion_parking.jpg' 
 import {Fontisto, Entypo } from '@expo/vector-icons' 
-
+import Search from './../components/Fab';
+import Loading from './../components/Loading';
 
 const Accueil = () => {
   return (
@@ -32,6 +33,8 @@ const Accueil = () => {
                 </View>
             </ImageBackground>
         </View>
+        <Loading />
+        <Search />
     </SafeAreaView>
   )
 }

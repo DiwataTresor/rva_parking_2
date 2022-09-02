@@ -19,15 +19,18 @@ import {
 } from "native-base";
 import logoRva from "./assets/logoRva.png";
 import Main from "./screens/Main";
+import { ContextProvider } from './contexts/ContextProvider';
 
 export default function App() {
   return (
     <NavigationContainer>
+    <ContextProvider>
       <TailwindProvider>
         <NativeBaseProvider>
           <Main />
         </NativeBaseProvider>
       </TailwindProvider>
+      </ContextProvider>
     </NavigationContainer>
   );
 }
