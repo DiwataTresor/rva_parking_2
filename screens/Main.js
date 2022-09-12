@@ -70,8 +70,9 @@ function Home() {
           options={{
             title:"Home",
             headerStyle: {
-              backgroundColor: "blue",
+              backgroundColor: "navy",
             },
+            headerShown:false,
             headerTintColor:"#FFF",
             tabBarIcon: ({ color, size }) => (<AntDesign name='home' size={24} color="black" />),
             tabBarInactiveTintColor:"navy",
@@ -84,24 +85,24 @@ function Home() {
         <Tab.Screen 
           options={{
             headerStyle: {
-              backgroundColor: "blue",
+              backgroundColor: "navy",
             },
             headerTintColor:"#FFF",
             tabBarIcon: ({ color, size }) => (<AntDesign name='export' size={24} color="black" />),
             tabBarInactiveTintColor:"navy",
-            
+            title:"Entrée Parking",
           }}
-          
           name="Entree parking" Icon component={Entreeparking} 
         />
         <Tab.Screen 
           options={{
             headerStyle: {
-              backgroundColor: "blue",
+              backgroundColor: "navy",
             },
             headerTintColor:"#FFF",
             tabBarIcon: ({ color, size }) => (<AntDesign name='export2' size={24} color="black" />),
             tabBarInactiveTintColor:"navy",
+            title:"Sortie Parking"
           }}
           name="Sortie parking" component={Sortieparking}  
         />

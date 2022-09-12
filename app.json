@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.tdlrva.rva_parking_2"
     },
     "web": {
       "favicon": "./assets/favicon.png"

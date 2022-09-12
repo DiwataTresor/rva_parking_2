@@ -1,43 +1,109 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Pressable,
-  TouchableHighlight,
-  Alert,
-  Button,
-  ScrollView,
-} from "react-native";
+import {View,Text,StyleSheet,SafeAreaView,Pressable,TouchableHighlight,Alert,Button,ScrollView} from "react-native";
 import React, { useState, useEffect } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { TouchableOpacity } from "react-native";
 import { Input } from "native-base";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  SimpleLineIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import {Ionicons,MaterialCommunityIcons,SimpleLineIcons,MaterialIcons,} from "@expo/vector-icons";
+import {useStateContext} from './../contexts/ContextProvider';
+
+import Loading from './../components/Loading';
 
 const Qr = () => {
+  const { nomUser, setNomUser, idUser } = useStateContext();
   const [scannerActive, setScannerActive] = useState(false);
   const [hasPermission, setHasPermissions] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [type, setType] = useState(BarCodeScanner.Constants.Type.back);
   const [saisieCode, setSaisieCode] = useState(false);
   const [immatriculation, setImmatriculation] = useState("");
+  const [immatriculationInput, setImmatriculationInput] = useState("");
+  const [loadingIsOpened, setLoadingIsOpened] = useState(false);
+  const [dateEntree,setDateEntree]=useState("");
+  const [dateSortie,setDateSortie]=useState("");
+  const [heureEntree,setHeureEntree]=useState("");
+  const [heureSortie,setHeureSortie]=useState("");
+  const [opEntree,setOpEntree]=useState("");
+  const [dataMouvement,setDataMouvement]=useState({});
+  const [displayInfo,setDisplayInfo]=useState(false);
+  const {api}=useStateContext();
   useEffect(() => {
+    // Alert.alert(
+    //   "Echec d'operation",
+    //   "Cette operation a echoué",[
+    //     {
+    //       text:"Continuer",
+    //       style:"cancel"
+    //     }
+    //   ]
+    // )
     async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermissions(status == "granted");
     };
   }, []);
+  const validateTicket = (data,origine="scanner") => {
+    setLoadingIsOpened(true);
+    let donnees=new FormData();
+    donnees.append("qry", "checkSortieVehicule");
+    donnees.append("id", data);
+    donnees.append("idUser", idUser);
+    fetch(api,{method:"POST",body:donnees}).then(r=>r.json())
+    .then(r=>{
+      setLoadingIsOpened(false);
+      if(r.n==0)
+      {
+        Alert.alert("Verification","Echec d'operation, Code inexistant",[
+          {
+            text:"Recommencer",
+            onPress:()=>{
+              if(origine=="scanner")
+              {
+                setScanned(false);
+                setScannerActive(true);
+              }
+            },
+            style:"default"
+          },
+          {
+            text:"Annuler",
+            style:"default"
+          }
+        ]);
+      }else if(r.n==1){
+        setDisplayInfo(true);
+        setDataMouvement(r);
+        setDateEntree(r.data.DateAcc);
+        setHeureEntree(r.data.HeureAcc);
+        setImmatriculation(r.data.Immatriculation);
+        setOpEntree(r.user[0].NomUt);
+      }else
+      {
+        Alert.alert("Echec d'operation",r.msg,[
+          {text:"Continuer"}
+        ]);
+        setDisplayInfo(false);
+      }
+    })
+    .catch(e=>{
+      setLoadingIsOpened(false);
+      Alert.alert("echec "+e);
+    });
+    setScannerActive(false);
+    setScanned(false);
+  }
   const handleSuccess = ({ type, data }) => {
-    Alert.alert(data);
-
-    setScanned(true);
+    validateTicket(data);
   };
+  const handleInputImmatriculation=()=>{
+    
+    if(immatriculationInput=="")
+    {
+      Alert.alert("Veuillez saisir un code ticket");
+    }else
+    {
+      validateTicket(immatriculationInput,"immatriculationInput");
+    }
+  }
   const handleScanQr = () => {
     setScannerActive(true);
   };
@@ -72,22 +138,6 @@ const Qr = () => {
                   </Text>
                 </View>
                 <View className="pr-3">
-                  <Text>
-                    <TouchableHighlight
-                      onPress={() => {
-                        capturer("sd");
-                      }}
-                    >
-                      <Text>
-                        <MaterialCommunityIcons
-                          name="camera"
-                          size={24}
-                          color="black"
-                        />
-                        &nbsp;&nbsp; Capture
-                      </Text>
-                    </TouchableHighlight>
-                  </Text>
                 </View>
               </View>
               <View className="mt-2 w-full">
@@ -114,9 +164,9 @@ const Qr = () => {
               </View>
             </View>
           ) : (
-            <View className="items-center">
+            <View className="items-center pt-3">
               <Text className="items-center">
-                <Text className="mr-2">
+                <Text className="mr-2 text-2xl mt-3">
                   Veuillez scanner le Qrcode &nbsp; &nbsp;
                 </Text>
               </Text>
@@ -159,46 +209,76 @@ const Qr = () => {
                           className="pl-3"
                         />
                       }
+                      onChangeText={(e) =>{
+                        setImmatriculationInput(e)
+                      }}
                       placeholder="Code"
                     />
                     <View className="mt-2">
-                      <Button title="Facturer" />
+                      <Button title="Facturer" onPress={()=>handleInputImmatriculation()} />
                     </View>
                   </View>
                 ) : null}
               </View>
-              <View className="mt-4">
-                <Text className="text-3xl mb-5">Informations d'entrée</Text>
-                <View className="flex flex-row space-x-2">
-                  <Ionicons
+              { displayInfo?(
+                <View className="mt-4">
+               {/* <Text className="text-3xl mb-5">Informations d'entrée</Text>*/}
+                <View className="space-x-2 items-center">
+                  {/*<Ionicons
                     name="information-circle-outline"
                     size={24}
                     color="black"
-                  />
-                  <Text className="mt-1"> Immatriculation : </Text>
+                    />*/}
+                  {/*<Text className="mt-1"> Immatriculation : */}
+                  <Text className="font-bold text-md">
+                    Immatriculation
+                  </Text>
+                  <View className="items-center content-center bg-red-400 px-0.1 rounded-full p-1 text-3xl text-white">
+                    <Text className="w-full px-0.1 rounded-full p-1 text-3xl text-white">
+                      {" "+immatriculation+" "}
+                    </Text>
+                  </View>
+                  
                 </View>
                 <View className="flex flex-row mt-3 space-x-2">
                   <Ionicons name="ios-calendar" size={24} color="black" />
-                  <Text className="mt-1">Date d'entrée : </Text>
+                  <Text className="mt-1 text-sm">Date entrée : 
+                    <Text className="text-md font-bold">
+                      {" "+dateEntree+" "} 
+                    </Text>  
+                    - Date Sortie: {dateSortie}
+                  </Text>
                 </View>
                 <View className="flex flex-row mt-3 space-x-2">
                   <SimpleLineIcons name="clock" size={24} color="black" />
-                  <Text className="mt-1">Heure d'entrée : </Text>
+                  <Text className="mt-1 text-sm">
+                    Heure d'entrée : 
+                    <Text className="font-bold text-md">
+                    {" "+heureEntree+" "} 
+                  </Text>   
+                    - Heure Sortie : {heureSortie}</Text>
                 </View>
                 <View className="flex flex-row mt-3 space-x-2">
                   <SimpleLineIcons name="user" size={24} color="black" />
-                  <Text className="mt-1">Par : </Text>
+                  <Text className="mt-1">Saise entrée: 
+                  <Text className="font-bold text-md"> 
+                    {opEntree}
+                  </Text>
+                  </Text>
                 </View>
-                <View className="items-center mt-2 rounded-md bg-blue-300 text-white py-3">
+                {/*<View className="items-center mt-2 rounded-md bg-blue-300 text-white py-3">
                   <Text className=" text-xl text-white">MONTANT A PAYER </Text>
                   <Text className="text-white text-2xl">00.00 USD </Text>
-                </View>
+                  </View>*/}
                 <View className="items-center"></View>
               </View>
+              ):null}
+              
             </View>
           )}
         </View>
       </ScrollView>
+      <Loading isOpened={loadingIsOpened} text="Traitement en cours..." />
     </SafeAreaView>
   );
 };

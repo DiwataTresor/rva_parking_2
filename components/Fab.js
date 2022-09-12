@@ -1,13 +1,29 @@
-import { View, Text, Button, Alert, Modal, StyleSheet, Pressable,TouchableHighlight,ActivityIndicator } from "react-native";
+import { View, Text, Button, Alert, Modal, StyleSheet, Pressable,TouchableHighlight,ActivityIndicator,SafeAreaView } from "react-native";
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { Fab, Icon, Tag,Input } from "native-base";
 import { AntDesign,MaterialIcons,MaterialCommunityIcons } from "@expo/vector-icons";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const Search = () => {
-  const [modalVisible, setModalVisible] = useState(true);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [btnRechercheVisible,setBtnrechercheVisible] = useState(false);
+  const [inputRecherche,setInputRecherche]=useState("");
+  const [error,setError]=useState("");
+  const {api} = useStateContext();
+  const rechercheRes=useNavigation();
+  const Recherche=()=>{
+    
+    if(inputRecherche==""){
+      setError("* Veuillez saisir une immatriculation");
+    }else
+    {
+      setModalVisible(false);
+      rechercheRes.push("AccueilRechercheResultat",{txtSearch:inputRecherche});
+    }
+  }
   return (
-    <>
+    <SafeAreaView>
       <View className="">
         <Modal
           animationType="fade"
@@ -31,17 +47,18 @@ const Search = () => {
                         </Text>    
                         <View className="w-full items-center">
                             <Input className="px-2"w={{base: "90%",md: "90%",}}
-                                pl="2" value={""} onChange={(e) => { setImmatriculation(e); }} onChangeText={""} 
+                                pl="2" value={inputRecherche}  onChangeText={(e)=>{setInputRecherche(e);setError("")}} 
                                 InputLeftElement={
                                     <MaterialIcons
                                         name="keyboard"
                                         size={24}
                                     color="gray"
                                 className="pl-3"
+                                  />
+                              }
+                              placeholder="Immatriculation"
                             />
-                        }
-                        placeholder="Immatriculation"
-                      />
+                            <Text className="text-red-600">{error}</Text>
                         </View>
                     </View>
                     <View>
@@ -54,8 +71,10 @@ const Search = () => {
                         </View>
                         <TouchableHighlight className="items-end">
                             <Pressable className="content-end">
-                                <View className="items-end p-4">
-                                    <Button onPress={()=>{setModalVisible(false)}} color="#ccc" title="ANNULER" />
+                                <View className="items-end p-4 flex flex-row space-x-2">
+                                    <Button onPress={()=>{Recherche()}} title="TROUVER" />
+                                    <Text>&nbsp;</Text>
+                                    <Button onPress={()=>{setModalVisible(false)}}  variants="outline" title="ANNULER" />
                                 </View>
                             </Pressable>
                         </TouchableHighlight>
@@ -69,7 +88,7 @@ const Search = () => {
         </Modal>
       </View>
       <Fab onPress={() => { setModalVisible(true); }} renderInPortal={false} shadow={2} right={5} bottom={5} size="sm" icon={<Icon color="white" as={AntDesign} name="search1" size="7" />} />
-    </>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

@@ -16,6 +16,10 @@ import {
 import { Icon } from "native-base";
 import { useStateContext } from "../contexts/ContextProvider";
 import { Tag } from "native-base";
+import VehiculeEnParking from "./VehiculeEnParking";
+import VehiculeSortis from "./VehiculeSortis";
+import Tarif from "./Tarif";
+import ChangementMotDePasse from "./ChangementMotDePasse";
 
 const Stack = createNativeStackNavigator();
 
@@ -49,7 +53,7 @@ const Parametrechangermotdepasse = () => {
 };
 const Parametreindex = () => {
   return (
-    <Stack.Navigator
+    <Stack.Navigator 
       keyboardHandlingEnabled={true}
       mode={"card"} // option (modal)
       headerMode={"screen"} // option (screen, float, none)
@@ -184,12 +188,108 @@ const Parametreindex = () => {
           ),
         }}
       />
+      <Stack.Screen
+        name="VehiculeEnParking"
+        component={VehiculeEnParking}
+        options={{
+          headerStyle: {
+            backgroundColor: "navy",
+          },
+          title: "Véhicules en stationnement",
+          headerTitleAlign: "left", // option (center, left) Defaults to center on iOS and left on Android.
+          // headerStyle: {
+          //     backgroundColor: BG_COLOR
+          // },
+          headerTitleStyle: {},
+          headerBackTitleStyle: {},
+          headerLeftContainerStyle: {},
+          headerTitleContainerStyle: {},
+          headerRightContainerStyle: {},
+          headerTintColor: "#fff",
+          headerTransparent: false,
+          cardShadowEnabled: true,
+          cardOverlayEnabled: true, // Defaults to true on Android and false on iOS.
+          
+        }}
+      />
+      <Stack.Screen
+        name="Tarif"
+        component={Tarif}
+        options={{
+          headerStyle: {
+            backgroundColor: "navy",
+          },
+          title: "Tarification",
+          headerTitleAlign: "left", // option (center, left) Defaults to center on iOS and left on Android.
+          // headerStyle: {
+          //     backgroundColor: BG_COLOR
+          // },
+          headerTitleStyle: {},
+          headerBackTitleStyle: {},
+          headerLeftContainerStyle: {},
+          headerTitleContainerStyle: {},
+          headerRightContainerStyle: {},
+          headerTintColor: "#fff",
+          headerTransparent: false,
+          cardShadowEnabled: true,
+          cardOverlayEnabled: true, // Defaults to true on Android and false on iOS.
+          
+        }}
+      />
+      <Stack.Screen
+        name="VehiculeSortis"
+        component={VehiculeSortis}
+        options={{
+          headerStyle: {
+            backgroundColor: "navy",
+          },
+          title: "Véhicules sortis",
+          headerTitleAlign: "left", // option (center, left) Defaults to center on iOS and left on Android.
+          // headerStyle: {
+          //     backgroundColor: BG_COLOR
+          // },
+          headerTitleStyle: {},
+          headerBackTitleStyle: {},
+          headerLeftContainerStyle: {},
+          headerTitleContainerStyle: {},
+          headerRightContainerStyle: {},
+          headerTintColor: "#fff",
+          headerTransparent: false,
+          cardShadowEnabled: true,
+          cardOverlayEnabled: true, // Defaults to true on Android and false on iOS.
+          
+        }}
+      />
+      <Stack.Screen
+        name="ChangementMotDePasse"
+        component={ChangementMotDePasse}
+        options={{
+          headerStyle: {
+            backgroundColor: "navy",
+          },
+          title: "Changer mon Mot de passe",
+          headerTitleAlign: "left", // option (center, left) Defaults to center on iOS and left on Android.
+          // headerStyle: {
+          //     backgroundColor: BG_COLOR
+          // },
+          headerTitleStyle: {},
+          headerBackTitleStyle: {},
+          headerLeftContainerStyle: {},
+          headerTitleContainerStyle: {},
+          headerRightContainerStyle: {},
+          headerTintColor: "#fff",
+          headerTransparent: false,
+          cardShadowEnabled: true,
+          cardOverlayEnabled: true, // Defaults to true on Android and false on iOS.
+          
+        }}
+      />
     </Stack.Navigator>
   );
 };
 const Parametre = () => {
   const [userName, setUserName] = useState("Tresor diwata");
-  const { nomUser, setNomUser,connected, setConnected} = useStateContext();
+  const { nomUser, setNomUser,connected, setConnected,idUser,roleUser,setRoleUser} = useStateContext();
   const list = [
     {
       title: "A Propos de l'Application",
@@ -231,68 +331,62 @@ const Parametre = () => {
             <FontAwesome5 name="user-cog" size={54} color="white" />
             <View className="ml-4 pt-4">
               <Text className="font-bold text-white">{nomUser}</Text>
-              <Text className="text-white">User</Text>
+              <Text className="text-white">Role: {roleUser}</Text>
             </View>
           </View>
         </View>
         <ScrollView>
-          <View className="mt-10 px-4 bg-gray-400 mx-4 border border-slate-400 rounded-md py-2">
+          <View className="mt-10 px-4 bg-gray-200 mx-4 border border-slate-200 rounded-md py-2">
             <View className="text-white rounded-md p-3  h-fit">
-              <Text className="text-white font-bold">REPORTING +</Text>
+              <Text className="text-orange-500 font-extrabold">REPORTING +</Text>
             </View>
             <View className="">
-              <View className="flex flex-row items-start border-b border-slate-500 py-4">
-                <Text className="text-white text-sm">
-                  Vehicules en stationnements
+              <View className="flex flex-row items-start border-slate-500 py-2 rounded-md bg-slate-100 pl-3">
+                <Text className="text-black text-sm" onPress={()=>{nv.push('VehiculeEnParking')}}>
+
+                  Vehicules en stationnement
                 </Text>
               </View>
-              <View className="flex flex-row items-start border-b border-slate-500 py-4">
-                <Text className="text-white text-sm">
-                  Vehicules en stationnements
+              <View className="flex flex-row items-start border-slate-500 py-2 rounded-md bg-slate-100 mt-2 pl-3">
+              <Text className="text-black text-sm" onPress={()=>{nv.push('VehiculeSortis')}}>
+                  Vehicules sortis
+                </Text>
+              </View>
+              <View className="flex flex-row items-start border-slate-500 py-2 rounded-md bg-slate-100 pl-3 mt-2 mb-2">
+              <Text className="text-black text-sm" onPress={()=>{nv.push('Tarif')}}>
+                  Tarif
                 </Text>
               </View>
             </View>
           </View>
-          <View className="mt-4 px-4 bg-gray-400 mx-4 border border-slate-400 rounded-md py-2">
+          <View className="mt-4 px-4 bg-gray-200 mx-4 border border-slate-200 rounded-md pt-2 pb-4">
             <View className="text-white rounded-md p-3  h-fit">
-              <Text className="text-white font-bold">MON COMPTE</Text>
+              <Text className="text-orange-500 font-bold">MON COMPTE</Text>
             </View>
             <View className="">
-              <View className="flex flex-row items-start border-b border-slate-500 py-4">
-                <Text className="text-white text-sm">
-                  Vehicules en stationnements
+            <View className="flex flex-row items-start border-slate-500 py-2 rounded-md bg-slate-100 pl-3">
+                <Text className="text-black text-sm">
+                  Mon journal
                 </Text>
               </View>
-              <View className="flex flex-row items-start border-b border-slate-500 py-4">
-                <Text className="text-white text-sm">
-                  Vehicules en stationnements
+              <View className="flex flex-row items-start border-slate-500 py-2 rounded-md bg-slate-100 pl-3 mt-2">
+                <Text className="text-black text-sm">
+                  Mon Profil
                 </Text>
               </View>
-            </View>
-          </View>
-          <View className="mt-4 px-4 bg-gray-400 mx-4 border border-slate-400 rounded-md py-2">
-            <View className="text-white rounded-md p-3  h-fit">
-              <Text className="text-white font-bold">MON COMPTE</Text>
-            </View>
-            <View className="">
-              <View className="flex flex-row items-start border-b border-slate-500 py-4">
-                <Text className="text-white text-sm">
-                  Vehicules en stationnements
-                </Text>
-              </View>
-              <View className="flex flex-row items-start border-b border-slate-500 py-4">
-                <Text className="text-white text-sm">
-                  Vehicules en stationnements
+              <View className="flex flex-row items-start border-slate-500 py-2 rounded-md bg-slate-100 pl-3 mt-2 mb-2">
+                <Text className="text-black text-sm">
+                  Changer mon mot de passe
                 </Text>
               </View>
             </View>
           </View>
         </ScrollView>
         <TouchableHighlight onPress={()=>setConnected(false)}>
-          <View className="px-4 mt-3 mb-3 pb-5">
-            <Text>
+          <View className="px-4 mt-3 mb-3 pb-5 pl-7">
+            <Text className="pl-2">
               <AntDesign name="poweroff" size={22} color="red" /> &nbsp;
-              Quitter
+              Se deconnecter
             </Text>
           </View>
         </TouchableHighlight>
